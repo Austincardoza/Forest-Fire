@@ -143,7 +143,7 @@ def main():
 
     elif option=='Effects':
         st.subheader("Effects due to forest fire")
-        dataf=pd.read_csv("Forest_Fire.csv")
+        dataf=pd.read_csv("forest_fire.csv")
         dataf.sort_values("Fire Occurrence", inplace=True)
         filter=dataf["Fire Occurrence"]==1
         dataf.where(filter,inplace=True)
