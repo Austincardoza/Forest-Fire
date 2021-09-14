@@ -57,11 +57,11 @@ def main():
 
     elif option=='Visualisation':
         st.subheader("Visualisation")
-        data=st.file_uploader("Upload your dataset:",type=['csv','xlsx','txt','json'])
-        
+        # data=st.file_uploader("Upload your dataset:",type=['csv','xlsx','txt','json'])
+        data=pd.read_csv("cov1.csv")
         if data is not None:
             st.success("Data successfully uploaded")
-            df=pd.read_csv(data)
+            df=pd.read_csv("cov1.csv")
             st.dataframe(df.head(50))
 
             if st.checkbox('Select Multiple Columns to plot'):
