@@ -10,7 +10,6 @@ model=pickle.load(open('model.pkl','rb'))
 matplotlib.use('Agg')
 from PIL import Image
 
-<script defer data-domain="share.streamlit.io/austincardoza/forest-fire/main/app.py" src="https://plausible.io/js/plausible.js"></script>
 
 
 st.title('Forest Fire Prediction/Analysis')
