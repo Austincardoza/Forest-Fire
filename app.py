@@ -5,17 +5,18 @@ import seaborn as sb
 import matplotlib
 import matplotlib.pyplot as plt
 import pickle
+import streamlit as st
+import streamlit_analytics
+
+with streamlit_analytics.track():
+    st.text_input("Write something")
+    st.button("Click me")
+
 model=pickle.load(open('model.pkl','rb'))
 
 matplotlib.use('Agg')
 from PIL import Image
 
-<html>
-<head>
-<script defer data-domain="share.streamlit.io/austincardoza/forest-fire/main/app.py" src="https://plausible.io/js/plausible.js"></script>
-
-</head>
-</html>
 
 st.title('Forest Fire Prediction/Analysis')
 image=Image.open('forest.jpg')
