@@ -6,6 +6,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 import pickle
 import streamlit as st
+import python_weather
+import asyncio
+import os
 
 
 model=pickle.load(open('model.pkl','rb'))
@@ -23,6 +26,42 @@ def predict_forest(oxygen,humidity,temperature):
     prediction=model.predict_proba(input)
     pred='{0:.{1}f}'.format(prediction[0][0], 2)
     return float(pred)
+
+async def gettemp(loc):
+  # declare the client. format defaults to the metric system (celcius, km/h, etc.)
+  async with python_weather.Client(format=python_weather.IMPERIAL) as client:
+    
+    # fetch a weather forecast from a city
+    weather = await client.get(loc)
+  
+    # returns the current day's forecast temperature (int)
+    return weather.current.temperature
+    # print(weather.current.humidity)
+    # print(weather.current.pressure) 
+    # 
+async def gethum(loc):
+  # declare the client. format defaults to the metric system (celcius, km/h, etc.)
+  async with python_weather.Client(format=python_weather.IMPERIAL) as client:
+    
+    # fetch a weather forecast from a city
+    weather = await client.get(loc)
+  
+    # returns the current day's forecast temperature (int)
+    # print(weather.current.temperature)
+    return weather.current.humidity 
+    # print(weather.current.pressure)  
+
+async def getpres(loc):
+  # declare the client. format defaults to the metric system (celcius, km/h, etc.)
+  async with python_weather.Client(format=python_weather.IMPERIAL) as client:
+
+    # fetch a weather forecast from a city
+    weather = await client.get(loc)
+  
+    # returns the current day's forecast temperature (int)
+    # print(weather.current.temperature)
+    # print(weather.current.humidity)
+    return weather.current.pressure
 
 def main():
     activities=['EDA','Visualisation','Prediction','Effects']
@@ -121,10 +160,24 @@ def main():
         </div>
         """
         st.markdown(html_temp, unsafe_allow_html=True)
+        
 
-        oxygen = st.text_input("Oxygen","")
-        humidity = st.text_input("Humidity","")
-        temperature = st.text_input("Temperature","")
+        if os.name == "nt":
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+        loc = st.text_input("Location","")
+
+        current_temperature=asyncio.run(gettemp(loc))
+        current_temperature=(current_temperature-32)*0.5
+        current_humidity=asyncio.run(gethum(loc))
+        current_pressure=asyncio.run(getpres(loc))
+        current_pressure=current_pressure+20
+
+
+
+        oxygen = st.text_input("Oxygen",current_pressure)
+        humidity = st.text_input("Humidity",current_humidity)
+        temperature = st.text_input("Temperature",current_temperature)
         safe_html="""  
         <div style="background-color:#F4D03F;padding:10px >
         <h2 style="color:white;text-align:center;"> Your forest is safe</h2>
